@@ -12,6 +12,12 @@ Este proyecto utiliza el dataset **FungiCLEF 2025 FungiTastic-FewShot** proporci
 - **Formato**: JPG con múltiples resoluciones
 - **Captions**: Descripciones textuales en inglés
 
+### Descarga del Dataset
+
+Debido al tamaño del conjunto de datos proporcionado, se debe descargar desde el siguiente enlace: https://www.kaggle.com/competitions/fungi-clef-2025/data
+
+Se espera que la estructura de carpetas sea idéntica a la sugerida en el siguiente punto para que funcione correctamente.
+
 ## 📁 Estructura Esperada
 
 ```
