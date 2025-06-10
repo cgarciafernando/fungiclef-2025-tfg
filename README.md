@@ -87,9 +87,9 @@ python app/main.py
 
 ## 👨‍🎓 Autor
 
-**Fernando [Tu Apellido]**  
-Trabajo de Fin de Grado - [Universidad]  
-Grado en [Tu Carrera]
+**Fernando Carrillo García**  
+Trabajo de Fin de Grado - Universidad de Huelva 
+Grado en Ingeniería Informática
 
 ## 📜 Licencia
 
