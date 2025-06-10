@@ -2,17 +2,6 @@
 
 Esta carpeta contiene las predicciones generadas por el pipeline multimodal.
 
-## 📁 Estructura
-
-```
-predicciones/
-├── submission_YYYY-MM-DD-HHMM.csv       # Predicciones para test
-├── validation_predictions.csv           # Predicciones para validación
-└── analysis/                           # Análisis detallado
-    ├── confusion_matrix.png
-    └── error_analysis.csv
-```
-
 ## 📊 Formato de Predicciones
 
 ### Archivo de Submission (Test)
