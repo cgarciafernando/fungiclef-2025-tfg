@@ -9,31 +9,9 @@
 - **Especies**: 2,427 especies de hongos
 
 ### 📊 Rendimiento
-- **Recall@5**: ~65-70% en validación
+- **Recall@5**: 0.574 en el conjunto de prueba de FungiCLEF 2025
 - **Dataset**: FungiCLEF 2025 FungiTastic-FewShot
 - **Fine-tuning**: 10 epochs con fusión multimodal (beta=0.75)
-
-## 📥 Descarga del Modelo
-
-### Opción 1: Git LFS (Recomendado)
-```bash
-# Instalar Git LFS
-git lfs install
-
-# Clonar repositorio (incluye modelo)
-git clone https://github.com/tu-usuario/fungiclef-2025-tfg.git
-cd fungiclef-2025-tfg
-
-# Verificar que el modelo se descargó
-ls -lh models/bioclip_multimodal_finetuned.pt
-```
-
-### Opción 2: Descarga Directa
-Si Git LFS no funciona:
-
-1. **Descargar desde releases del repositorio**
-2. **Colocar en**: `models/bioclip_multimodal_finetuned.pt`
-3. **Verificar tamaño**: Debe ser ~500-600 MB
 
 ## 📋 Información Técnica
 
