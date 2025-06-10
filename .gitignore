@@ -39,16 +39,11 @@ ENV/
 Thumbs.db
 
 # FungiCLEF 2025 Específicos
-*.pt
 *.pth
 *.ckpt
 pipeline_cache/
 *.log
 
-# Dataset (muy grande para Git)
-dataset/images/
-dataset/metadata/FungiTastic-FewShot/
-dataset/captions/
 
 # Resultados temporales
 resultados/temp/
