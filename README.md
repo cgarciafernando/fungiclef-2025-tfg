@@ -88,7 +88,7 @@ python app/main.py
 ## 👨‍🎓 Autor
 
 **Fernando Carrillo García**  
-Trabajo de Fin de Grado - Universidad de Huelva 
+Trabajo de Fin de Grado - Universidad de Huelva, 
 Grado en Ingeniería Informática
 
 ## 📜 Licencia
