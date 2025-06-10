@@ -15,10 +15,6 @@
 - 📊 **FAISS Similarity Search**: Búsqueda eficiente en espacio vectorial
 - 🌐 **Interfaz Gradio**: Demo interactiva web
 
-## 🚀 Demo en Vivo
-
-[![Abrir en Hugging Face](https://img.shields.io/badge/🤗-Abrir%20Demo-blue)](https://huggingface.co/spaces/tu-usuario/fungiclef-2025)
-
 ## 📁 Estructura del Proyecto
 
 ```
