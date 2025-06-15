@@ -68,7 +68,7 @@ python app/main.py
 
 ## 📊 Resultados
 
-- **Recall@5**: ~65-70% en conjunto de validación
+- **Recall@5**: 0.574 sobre el conjunto de prueba. Posición 22 de 74 en la tabla de clasificación.
 - **Especies clasificadas**: 2,427 especies únicas
 - **Dataset**: FungiCLEF 2025 FungiTastic-FewShot
 
