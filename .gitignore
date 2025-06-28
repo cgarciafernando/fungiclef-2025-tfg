@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# FungiCLEF 2025 Específicos
+*.pth
+*.ckpt
+pipeline_cache/
+*.log
+
+
+# Resultados temporales
+resultados/temp/
+predicciones/temp/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Large files
+*.h5
+*.hdf5
+*.pkl
+*.pickle
