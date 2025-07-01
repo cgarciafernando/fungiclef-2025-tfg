@@ -1293,16 +1293,16 @@ class MultimodalFungiCLEF2025Pipeline:
             except Exception:
                 return torch.zeros((3, 224, 224)), prompt, label
 
-    def finetune_bioclip_with_early_fusion(self, train_data, val_data,
-                                          epochs=10,              # Según memoria
-                                          batch_size=32,          # Según memoria
-                                          lr_model=3e-5,          # Según memoria
-                                          lr_adapter=2e-4,        # Según memoria
-                                          beta=0.75):             # Según memoria
+     def finetune_bioclip_with_early_fusion(self, train_data, val_data,
+                                          epochs=10,              
+                                          batch_size=32,          
+                                          lr_model=3e-5,          
+                                          lr_adapter=2e-4,        
+                                          beta=0.75):             
         """
         Fine-tuning de BioCLIP adaptado para early fusion con parámetros optimizados
         """
-
+    
         class OptimizedFocalLoss(nn.Module):
             def __init__(self, alpha=0.3, gamma=1.5, label_smoothing=0.1):
                 super().__init__()
@@ -1316,7 +1316,7 @@ class MultimodalFungiCLEF2025Pipeline:
                 pt = torch.exp(-ce_loss)
                 focal_loss = self.alpha * (1 - pt) ** self.gamma * ce_loss
                 return focal_loss.mean()
-
+    
         # Transformaciones
         train_transform = transforms.Compose([
             transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),       
@@ -1328,40 +1328,37 @@ class MultimodalFungiCLEF2025Pipeline:
             transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), 
                                 std=(0.26862954, 0.26130258, 0.27577711))
         ])
-
+    
         # Datasets
         train_ds = self.FungiMultimodalDataset(train_data, transform=train_transform, 
                                               class_to_idx=self.class_to_idx, pipeline=self)
         val_ds = self.FungiMultimodalDataset(val_data, transform=self.models['bioclip']['preprocess'], 
                                             class_to_idx=self.class_to_idx, pipeline=self)
-
+    
         if len(train_ds) == 0:
             logger.error("Dataset vacío")
             return None, 0.0
-
+    
         # Weighted sampler con parámetros optimizados
         class_counts = Counter(train_ds.labels)
         max_count = max(class_counts.values())
         class_weights = [max(0.03, (max_count / class_counts[label]) ** (1/3)) for label in train_ds.labels]
-        weights = torch.DoubleTensor(class_weights)
-        sampler = torch.utils.data.WeightedRandomSampler(weights, len(weights))
-
-        # DataLoaders con batch_size optimizado
-        train_loader = DataLoader(train_ds, batch_size=batch_size, sampler=sampler, 
-                                 num_workers=0, pin_memory=False)
+    
+        # Solo val_loader se crea una vez
         val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, 
                                num_workers=0, pin_memory=False)
-
+    
         logger.info(f"Dataset sizes - Train: {len(train_ds)}, Val: {len(val_ds)}")
-
+        logger.info(f"Usando 50% del train por época: {len(train_ds)//2} muestras")
+    
         # Modelo BioCLIP
         model = self.models['bioclip']['model'].to(self.device)
         tokenizer = self.models['bioclip']['tokenizer']
-
+    
         # Congelar modelo base excepto últimas capas
         for param in model.parameters():
             param.requires_grad = False
-
+    
         # Descongelar las 6 ÚLTIMAS CAPAS COMPLETAS del transformer visual
         if hasattr(model, 'visual') and hasattr(model.visual, 'transformer') and hasattr(model.visual.transformer, 'resblocks'):
             total_layers = len(model.visual.transformer.resblocks)
@@ -1374,13 +1371,13 @@ class MultimodalFungiCLEF2025Pipeline:
                 logger.info(f"Descongelando capa {i}")
                 for param in model.visual.transformer.resblocks[i].parameters():
                     param.requires_grad = True
-
+    
         # Descongelar capas de normalización y proyección
         for name, param in model.named_parameters():
             if 'ln_' in name or 'norm' in name or 'visual.proj' in name:
                 param.requires_grad = True
                 logger.info(f"Descongelando: {name}")
-
+    
         num_classes = len(self.class_to_idx)
         
         # Adapter diseñado para embeddings fusionados con arquitectura optimizada según memoria
@@ -1397,9 +1394,9 @@ class MultimodalFungiCLEF2025Pipeline:
             nn.Dropout(0.4),                          
             nn.Linear(1024, num_classes)              
         ).to(self.device)
-
+    
         logger.info(f"Adapter creado para dim {expected_fused_dim} -> {num_classes} clases")
-
+    
         # Optimizador con LR optimizados según memoria
         model_params = [p for p in model.parameters() if p.requires_grad]
         adapter_params = list(multimodal_adapter.parameters())
@@ -1412,10 +1409,10 @@ class MultimodalFungiCLEF2025Pipeline:
                 {'params': adapter_params, 'lr': lr_adapter, 'weight_decay': 5e-5}
             ])
             logger.info(f"Optimizador con LRs optimizados - Modelo: {lr_model}, Adapter: {lr_adapter}")
-
+    
         # Scheduler con parámetros optimizados
-        warmup_steps = min(300, len(train_loader) * 2)
-        total_steps = epochs * len(train_loader)
+        warmup_steps = min(300, len(train_ds) // batch_size // 2 * 2)
+        total_steps = epochs * (len(train_ds) // batch_size // 2)
         
         def lr_lambda_cosine_warmup(current_step):
             if current_step < warmup_steps:
@@ -1425,17 +1422,32 @@ class MultimodalFungiCLEF2025Pipeline:
                 return max(0.01, 0.5 * (1.0 + math.cos(math.pi * progress)))
         
         scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda_cosine_warmup)
-
+    
         # Loss function optimizada según memoria
         criterion = OptimizedFocalLoss(alpha=0.3, gamma=1.5, label_smoothing=0.1)
-
+    
         logger.info("Iniciando fine-tuning para EARLY FUSION con parámetros optimizados...")
         logger.info(f"Epochs: {epochs}, Batch size: {batch_size}, Beta: {beta}")
-
+    
         best_val_acc = 0.0
         best_model_state = None
-
+    
         for epoch in range(epochs):
+            # === CREAR NUEVO SUBSET 50% CADA ÉPOCA ===
+            subset_size = len(train_ds) // 2
+            subset_indices = torch.randperm(len(train_ds))[:subset_size]
+            subset_weights = [class_weights[i] for i in subset_indices]
+            sampler = torch.utils.data.WeightedRandomSampler(subset_weights, len(subset_weights))
+            
+            # Crear DataLoader con subset diferente cada época
+            train_loader = DataLoader(
+                torch.utils.data.Subset(train_ds, subset_indices),
+                batch_size=batch_size, sampler=sampler,
+                num_workers=0, pin_memory=False
+            )
+            
+            logger.info(f"Época {epoch+1}: Procesando {subset_size} muestras aleatorias del train")
+            
             # Training
             model.train()
             multimodal_adapter.train()
@@ -1538,7 +1550,7 @@ class MultimodalFungiCLEF2025Pipeline:
                     'num_classes': num_classes
                 }
                 logger.info(f"  ✓ Nuevo mejor modelo guardado (Val Acc: {val_acc:.4f})")
-
+    
         # Función para extraer embeddings multimodales
         def extract_multimodal_embeddings(img, prompt="A photograph of fungi species"):
             img_tensor = self.models['bioclip']['preprocess'](img).unsqueeze(0).to(self.device)
@@ -1548,14 +1560,14 @@ class MultimodalFungiCLEF2025Pipeline:
                 text_features = model.encode_text(text_tokens)
                 fused_features = beta * image_features + (1 - beta) * text_features
                 return fused_features.cpu().numpy()
-
+    
         # Actualizar el modelo en el pipeline
         self.models['bioclip']['model'] = model
         self.models['bioclip']['finetuned'] = True
         self.models['bioclip']['multimodal_adapter'] = multimodal_adapter
         self.models['bioclip']['extract_multimodal'] = extract_multimodal_embeddings
         self.models['bioclip']['beta'] = beta
-
+    
         # Guardar el modelo
         models_dir = Path(self.base_path) / "models"
         models_dir.mkdir(exist_ok=True, parents=True)
@@ -1566,7 +1578,7 @@ class MultimodalFungiCLEF2025Pipeline:
             logger.info(f"✅ Modelo early fusion guardado en: {model_path}")
             logger.info(f"🎯 Mejor Val Acc: {best_val_acc:.4f}")
 
-        return model, best_val_acc
+    return model, best_val_acc
 
     # ===== FUNCIONES PRINCIPALES =====
     
