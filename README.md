@@ -6,14 +6,16 @@
   <img src="https://img.shields.io/badge/python-3.12-blue.svg" />
   <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" />
   <img src="https://img.shields.io/badge/BioCLIP-finetuned-green.svg" />
+  <img src="https://img.shields.io/badge/CLEF_2025-Published-blueviolet.svg" />
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
 </p>
 <p align="center">
-  <strong>Ranked 22nd out of 74 international teams · Recall@5: 0.574 · +28% above competition median</strong>
+  <strong>Ranked 22nd out of 74 international teams &nbsp;·&nbsp; Recall@5: 0.574 &nbsp;·&nbsp; +28% above competition median</strong>
 </p>
 Bachelor's thesis project at Universidad de Huelva. A multimodal classification pipeline for rare fungal species identification, combining Vision-Language Models, ecological context, and taxonomic knowledge to handle extreme data scarcity (84.6% of species with fewer than 5 training samples).
  
-The work was published as a peer-reviewed paper at CLEF 2025 (CEUR Workshop Proceedings).
+> **Paper:** [I2C-UHU-PEGASUS at FungiCLEF 2025: Multimodal Pipeline for Rare Fungal Species Classification Using Fine-Tuned VLMs and Ecological Context](https://ceur-ws.org/Vol-4038/paper_236.pdf)
+> Fernando Carrillo García, Victoria Pachón Álvarez, Jacinto Mata Vázquez, Manuel Guerrero García — University of Huelva, Spain
  
 ---
  
@@ -75,12 +77,6 @@ See instructions in [`models/README.md`](models/README.md).
 ```bash
 python app/main.py
 ```
- 
-## Paper
- 
-*I2C-UHU-PEGASUS at FungiCLEF 2025: Multimodal Pipeline for Rare Fungal Species Classification Using Fine-Tuned VLMs and Ecological Context*
-Fernando Carrillo García, Victoria Pachón Álvarez, Jacinto Mata Vázquez, Manuel Guerrero García
-CLEF 2025 — CEUR Workshop Proceedings
  
 ## Author
  
