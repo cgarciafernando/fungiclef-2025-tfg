@@ -1,100 +1,88 @@
-# 🍄 FungiCLEF 2025 - Sistema de Clasificación de Hongos
-
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![Gradio](https://img.shields.io/badge/gradio-4.0+-orange.svg)](https://gradio.app/)
-[![BioCLIP](https://img.shields.io/badge/BioCLIP-finetuned-green.svg)](https://github.com/imageomics/bioclip)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## 📋 Descripción
-
-**Trabajo de Fin de Grado** - Sistema avanzado de clasificación automática de especies de hongos basado en:
-
-- 🧠 **Pipeline Multimodal**: Combina información visual y textual
-- 🔬 **BioCLIP Fine-tuned**: Modelo especializado en biodiversidad adaptado para hongos
-- 🤖 **DINOv2 Ensemble**: Características visuales complementarias
-- 📊 **FAISS Similarity Search**: Búsqueda eficiente en espacio vectorial
-- 🌐 **Interfaz Gradio**: Demo interactiva web
-
-## 📁 Estructura del Proyecto
-
+![fungiclef-2025-tfg](https://socialify.git.ci/cgarciafernando/fungiclef-2025-tfg/image?font=Inter&language=1&name=1&owner=1&pattern=Circuit+Board&stargazers=1&theme=Dark)
+ 
+# FungiCLEF 2025 — Multimodal Pipeline for Rare Fungal Species Classification
+ 
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.12-blue.svg" />
+  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/BioCLIP-finetuned-green.svg" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+</p>
+<p align="center">
+  <strong>Ranked 22nd out of 74 international teams · Recall@5: 0.574 · +28% above competition median</strong>
+</p>
+Bachelor's thesis project at Universidad de Huelva. A multimodal classification pipeline for rare fungal species identification, combining Vision-Language Models, ecological context, and taxonomic knowledge to handle extreme data scarcity (84.6% of species with fewer than 5 training samples).
+ 
+The work was published as a peer-reviewed paper at CLEF 2025 (CEUR Workshop Proceedings).
+ 
+---
+ 
+## What does this project do?
+ 
+The pipeline combines multiple information sources to identify fungal species from images and metadata. Rather than relying on visual features alone, it integrates morphological descriptions, ecological context (habitat, substrate, biogeographic region, season), and hierarchical taxonomic information to improve classification in few-shot scenarios.
+ 
+**Key components:**
+- Fine-tuned BioCLIP with multimodal classifier (visual + textual fusion, β=0.75)
+- DINOv2 ensemble for complementary visual representations
+- Probabilistic ecological context model across 4 dimensions
+- Multi-strategy fusion: k-NN, centroid, medoid, metadata matching, description similarity
+- FAISS with HNSW indexing for efficient similarity search
+- Adaptive weighted sampling and rare-class boosting for class imbalance
+## Results
+ 
+| Metric | Value |
+|---|---|
+| Recall@5 (test set) | 0.574 |
+| Competition rank | 22nd / 74 teams |
+| Above median | +28% |
+| Total improvement over baseline | +8.1% |
+| Species classified | 2,427 |
+ 
+## Project structure
+ 
 ```
 fungiclef-2025-tfg/
-├── app/                    # 🎯 Aplicación principal
-│   ├── main.py            # Interfaz Gradio
-│   ├── pipeline.py        # Pipeline multimodal
-│   └── utils.py           # Utilidades
-├── dataset/               # 📊 Datos (instrucciones de descarga)
-├── predicciones/          # 📈 Resultados de predicción
-├── resultados/            # 🏆 Métricas y análisis
-├── models/                # 🧠 Modelos entrenados
+├── app/
+│   ├── main.py            # Gradio interface
+│   ├── pipeline.py        # Multimodal pipeline
+│   └── utils.py
+├── dataset/               # Download instructions
+├── predicciones/          # Prediction outputs
+├── resultados/            # Metrics and analysis
+├── models/
 │   └── bioclip_multimodal_finetuned.pt
-└── docs/                  # 📖 Documentación
+└── docs/
 ```
-
-## ⚡ Instalación Rápida
-
-### 1. Clonar repositorio
+ 
+## How to run it
+ 
+**1. Clone the repository**
 ```bash
-git clone https://github.com/tu-usuario/fungiclef-2025-tfg.git
+git clone https://github.com/cgarciafernando/fungiclef-2025-tfg
 cd fungiclef-2025-tfg
 ```
-
-### 2. Instalar dependencias
+ 
+**2. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
-
-### 3. Descargar modelo fine-tuneado
-Ver instrucciones en [`models/README.md`](models/README.md)
-
-### 4. Ejecutar demo
+ 
+**3. Download the fine-tuned model**
+ 
+See instructions in [`models/README.md`](models/README.md).
+ 
+**4. Run the demo**
 ```bash
 python app/main.py
 ```
-
-## 🎯 Características Principales
-
-### Pipeline Multimodal
-- **Fusión de información**: Combina características visuales (BioCLIP + DINOv2) y textuales
-- **Fine-tuning especializado**: Modelo adaptado específicamente para hongos
-- **Búsqueda por similitud**: FAISS para retrieval eficiente de especies similares
-
-### Interfaz Intuitiva
-- **Exploración visual**: Visualización del espacio vectorial 2D con clusters
-- **Predicciones explicables**: Top-5 especies con confianza y ejemplos visuales
-- **Información taxonómica**: Detalles de género, familia y características ecológicas
-
-## 📊 Resultados
-
-- **Recall@5**: 0.574 sobre el conjunto de prueba. Posición 22 de 74 en la tabla de clasificación.
-- **Especies clasificadas**: 2,427 especies únicas
-- **Dataset**: FungiCLEF 2025 FungiTastic-FewShot
-
-## 🛠️ Tecnologías Utilizadas
-
-- **Deep Learning**: PyTorch, Transformers
-- **Modelos**: BioCLIP, DINOv2, CLIP
-- **Búsqueda**: FAISS, scikit-learn
-- **Interface**: Gradio, Matplotlib
-- **Deploy**: Hugging Face Spaces
-
-## 📖 Documentación
-
-- 📘 [Guía de Instalación](docs/instalacion.md)
-- 🎮 [Manual de Uso](docs/uso.md)
-
-## 👨‍🎓 Autor
-
-**Fernando Carrillo García**  
-Trabajo de Fin de Grado - Universidad de Huelva, 
-Grado en Ingeniería Informática
-
-## 📜 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
-
-## 🙏 Agradecimientos
-
-- [LifeCLEF](https://www.imageclef.org/LifeCLEF2025) por el dataset FungiCLEF 2025
-- [Imageomics](https://github.com/imageomics/bioclip) por BioCLIP
-- [Meta AI](https://github.com/facebookresearch/dinov2) por DINOv2
+ 
+## Paper
+ 
+*I2C-UHU-PEGASUS at FungiCLEF 2025: Multimodal Pipeline for Rare Fungal Species Classification Using Fine-Tuned VLMs and Ecological Context*
+Fernando Carrillo García, Victoria Pachón Álvarez, Jacinto Mata Vázquez, Manuel Guerrero García
+CLEF 2025 — CEUR Workshop Proceedings
+ 
+## Author
+ 
+**Fernando Carrillo García**
+B.S. Computer Engineering — Universidad de Huelva
